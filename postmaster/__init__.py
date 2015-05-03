@@ -174,11 +174,12 @@ class Shipment(PostmasterObject):
         return isinstance(status, dict) and status.get('message') == 'OK'
 
     @classmethod
-    def list(cls, cursor=None, limit=None):
+    def list(cls, cursor=None, limit=None, status=None):
         """
         List of user defined shipments.
         :param cursor: cursor or previousCursor for shipments list querying.
         :param limit: Quantity of shipments per query.
+        :param status: Extract shipments only with provided status
         :return: Tuple with shipments list, cursor and previous cursor.
         """
         shipment = Shipment()
@@ -187,6 +188,8 @@ class Shipment(PostmasterObject):
             data['cursor'] = cursor
         if limit is not None:
             data['limit'] = limit
+        if status is not None:
+            data['status'] = status
 
         res = shipment.get(params=data)
         return res.get('results'), res['cursor'], res['previousCursor']
